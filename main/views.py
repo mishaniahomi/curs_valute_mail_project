@@ -2,9 +2,9 @@ from django.views.generic import CreateView
 
 from .models import Contact
 from .forms import ContactForm
-from .service import send
+# from .service import send
 # from .tasks import send_spam_email
-
+from curs.celery import send
 
 class ContactView(CreateView):
 
@@ -15,5 +15,4 @@ class ContactView(CreateView):
 
     def form_valid(self, form):
         form.save()
-        send(form.instance.email, form.instance.name)
         return super().form_valid(form)
