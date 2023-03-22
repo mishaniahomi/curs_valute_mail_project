@@ -135,8 +135,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #dishnsbxtziafxnm
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'test.test@gmail.com'
-EMAIL_HOST_PASSWORD = '**************'
+EMAIL_HOST_USER = '****.****@gmail.com'
+EMAIL_HOST_PASSWORD = '***************8'
 EMAIL_PORT = 587
 
 CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
