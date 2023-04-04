@@ -23,7 +23,7 @@
 <img src="./readme_assets/Screenshot_2023-03-22_09-44-55.png" width="100%">
 Пример отображения графика доллара:
 <img src="./readme_assets/Screenshot_2023-03-22_09-46-18.png" width="100%">
-Страница теста
+Страница отправления письма с курсами
 <img src="./readme_assets/Screenshot_2023-03-22_09-48-18.png" width="100%">
 Результаты планировщика, который располагается на 5555 порту:
 <img src="./readme_assets/Screenshot_2023-03-22_09-58-16.png" width="100%">
