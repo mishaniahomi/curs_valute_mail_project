@@ -1,0 +1,75 @@
+services:
+    server:
+       build: ./server
+       restart: always
+       volumes:
+        - ./server/tennis_app:/app/
+       command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+       ports:
+        - 8000:8000
+       environment:
+            - DEBUG=1
+            - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+            - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+       depends_on:
+        - db
+        - redis
+    redis:
+        image: redis/redis-stack
+        ports:
+         - 8001:8001
+    db:
+        image: postgres:13.0-alpine
+        volumes:
+         - .postgres_data:/var/lib/postgresql/data/
+        ports: 
+         - 5432:5432
+        restart: always
+        environment:
+         - POSTGRES_DB=tennis_db
+         - POSTGRES_USER=tennis_user
+         - POSTGRES_PASSWORD=tennis_user
+    celery:
+        build: ./server
+        command: celery -A tennis worker -l info
+        environment:
+            - DEBUG=1
+            - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+            - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        volumes:
+        - ./server/tennis_app:/app/
+        depends_on:
+        - redis
+
+    celery-beat:
+        build: ./server
+        command: celery -A tennis beat -l info
+        volumes:
+        - ./server/tennis_app:/app/
+        environment:
+            - DEBUG=1
+            - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+            - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        depends_on:
+        - redis
+    dashboard:
+        build: ./server
+        command: celery flower -A tennis --port=5555 --broker=redis://redis:6379/0
+        environment:
+            - DEBUG=1
+            - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+            - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        ports:
+            - 5555:5555
+        depends_on:
+            - server
+            - redis
+            - celery
