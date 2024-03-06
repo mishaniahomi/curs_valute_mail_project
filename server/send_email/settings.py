@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from celery.schedules import crontab
+import send_email.tasks
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-^qg*s3_2v33yc@u&m*q7u4mc=l#4rzrbmw-n0-4v5f49=5_&^=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'curs',
+    'dash_bootstrap_components',
 ]
 
 MIDDLEWARE = [
@@ -109,13 +111,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_L10N = True
+
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -131,15 +135,33 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
-#dishnsbxtziafxnm
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = '****.****@gmail.com'
-EMAIL_HOST_PASSWORD = '***************8'
 EMAIL_PORT = 587
+EMAIL_HOST_USER = 'misha.homi@gmail.com'
+EMAIL_HOST_PASSWORD = 'yrvsctiipzcibetb'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "tennis.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}
+
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "send_email.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}
 import django
 django.setup()

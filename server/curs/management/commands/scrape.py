@@ -25,15 +25,15 @@ class Command(BaseCommand):
                 m = begin.month
             else:
                 m = f'0{begin.month}'
-            print(f"{d}/{m}/{begin.year}")
+            
             url = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req={d}/{m}/{begin.year}'
-            #url = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req=19/03/2023'
-            responce = requests.post(url)
+            print(f"{d}/{m}/{begin.year}")
+            responce = requests.get(url)
             if responce.status_code != 200:
                 raise ValueError(f"Request add_user failed {responce.status_code}")
             resp_xml_content = responce.content
             soup = BeautifulSoup(resp_xml_content, 'lxml-xml')
-            # print(soup)
+          
             for i in soup.ValCurs:
                     try:
                         val = Valute.objects.get(unique_id=i['ID'])
@@ -51,35 +51,9 @@ class Command(BaseCommand):
                     cur.value = float(i.Value.contents[0].replace(',', '.'))
                     cur.save()
 
-        begin = datetime.datetime.now()
+        begin = datetime.datetime.now() - datetime.timedelta(days=1)
+        
         while begin:
             setcursandvalute(begin=begin)
             begin = begin - datetime.timedelta(days=1)
-            # break
-
-# def set_curs_and_valute( d, m, begin.year):
-#     print(f"{d}/{m}/{begin.year}")
-    # url = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req={d}/{m}/{begin.year}'
-    # #url = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req=19/03/2023'
-    # responce = requests.post(url)
-    # if responce.status_code != 200:
-    #     raise ValueError(f"Request add_user failed {responce.status_code}")
-    # resp_xml_content = responce.content
-    # soup = BeautifulSoup(resp_xml_content, 'lxml-xml')
-    # print(soup)
-    # for i in soup.ValCurs:
-    #         try:
-    #             val = Valute.objects.get(unique_id=i['ID'])
-    #         except:
-    #             val = Valute()
-    #             val.unique_id = i['ID']
-    #             val.num_code = int(i.NumCode.contents[0])
-    #             val.char_code = i.CharCode.contents[0]
-    #             val.nominal = int(i.Nominal.contents[0])
-    #             val.name = i.Name.contents[0]
-    #             val.save()
-    #         cur = Curs()
-    #         cur.valute_id = val
-    #         cur.datetime = begin
-    #         cur.value = float(i.Value.contents[0].replace(',', '.'))
-    #         cur.save()
+            

@@ -26,13 +26,13 @@ app.autodiscover_tasks()
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=0), test.s('Обновление данных воскресенье'), name='0')
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=1), test.s('Обновление данных понедельник'), name='1')
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=2), test.s('Обновление данных вторник'), name='2')
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=3), test.s('Обновление данных среда'), name='3')
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=4), test.s('Обновление данных четверг'), name='4')
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=5), test.s('Обновление данных пятница'), name='5')
-    sender.add_periodic_task(crontab(hour=9, minute=57, day_of_week=6), test.s('Обновление данных суббота'), name='6')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=0), test.s('Обновление данных воскресенье'), name='0')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=1), test.s('Обновление данных понедельник'), name='1')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=2), test.s('Обновление данных вторник'), name='2')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=3), test.s('Обновление данных среда'), name='3')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=4), test.s('Обновление данных четверг'), name='4')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=5), test.s('Обновление данных пятница'), name='5')
+    sender.add_periodic_task(crontab(hour=10, minute=36, day_of_week=6), test.s('Обновление данных суббота'), name='6')
 
     sender.add_periodic_task(crontab(hour=9, minute=58, day_of_week=0), allsend.s('Рассылка воскресенье'), name='Рассылка воскресенье')
     sender.add_periodic_task(crontab(hour=9, minute=58, day_of_week=1), allsend.s('Рассылка понедельник'), name='Рассылка понедельник')
@@ -65,7 +65,6 @@ def test(args):
     else:
         m = f'0{begin.month}'
     url = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req={d}/{m}/{begin.year}'
-    #url = f'http://www.cbr.ru/scripts/XML_daily.asp?date_req=19/03/2023'
     responce = requests.post(url)
     if responce.status_code != 200:
         raise ValueError(f"Request add_user failed {responce.status_code}")

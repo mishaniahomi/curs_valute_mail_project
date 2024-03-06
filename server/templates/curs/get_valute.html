@@ -12,6 +12,7 @@
     <title>Мониторинг Валют</title>
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
@@ -37,56 +38,22 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h2">{{ val.name }}</h1><br>
             <div class="btn-toolbar mb-2 mb-md-0">
-              <form class="row g-3 needs-validation" novalidate>
-                <select class="form-select" id="validationTooltip04" required name="filter_search">
-                  <option value="7" {% if days  == 7 %} selected {% endif %}>Неделя</option>
-                  <option value="30" {% if days  == 30 %} selected {% endif %}>Месяц</option>
-                  <option value="365" {% if days  == 365 %} selected {% endif %}>Год</option>
-                  <option value="99999" {% if days  == 99999 %} selected {% endif %}>Всё время</option>
-                  {% if days not in allow_days  %}<option value="{{ days }}" selected>Пользовательский отрезок</option> {% endif %}
-                </select>
-                <button class="btn btn-primary" type="submit">Посмотреть</button>
-              </form>
+              <form method="GET" action="{% url 'get_curs' pk=val.id  %}">
+                <div class="row">
+                {{ form.as_p }}
+              </div>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
             </div>
           </div>
           <p>Обозначение: {{ val.unique_id }}</p>
           <p>Числовой код: {{ val.num_code }}</p>
           <p>Буквенный код: {{ val.char_code }}</p>
           <p>Номинал: {{ val.nominal }}</p>
-          <canvas class="my-4 chartjs-render-monitor" id="myChart" style="display: block; height: 635px; width: 1504px;" width="1346" height="568"></canvas>
+          
+          {{ chart|safe }}
         </main>
       </div>
     </div>
-
-    <script src="{% static 'js/Chart.js' %}"></script>
-    <script>
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: [{% for i in curs %}'{{i.datetime|date:"d.m.y"}}',{% endfor %}],
-          datasets: [{
-            data: [{% for i in curs %}{{i.value}},{% endfor %}],
-            lineTension: 0,
-            backgroundColor: 'transparent',
-            borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: false
-              }
-            }]
-          },
-          legend: {
-            display: false,
-          }
-        }
-      });
-    </script>
 </body>
 </html>

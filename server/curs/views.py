@@ -1,14 +1,39 @@
 from django.shortcuts import render
-from .models import Curs, Valute
 import datetime
+import plotly.express as px
+import dash_bootstrap_components as dbc
+
+
+from .models import Curs, Valute
+from .forms import DateForm
+
+
 
 def get_curs(request, pk):
-    days = 99999
-    allow_days = [7,30,365,99999]
+    external_stylesheets = [dbc.themes.CERULEAN]
+    start = request.GET.get('start')
+    end = request.GET.get('end')
+
+    
     val = Valute.objects.get(pk=pk)
-    if request.GET.getlist('filter_search'):
-        days = int(request.GET['filter_search'])
-        curs = Curs.objects.filter(valute_id=val, datetime__gte=datetime.datetime.now()-datetime.timedelta(days)).order_by('datetime')
-    else:
-        curs = Curs.objects.filter(valute_id=val).order_by('datetime')
-    return render(request, 'curs/get_valute.html', context={'val': val, 'curs': curs, 'days': days, 'allow_days':allow_days})
+    
+    curs2 = Curs.objects.filter(valute_id=val).order_by('datetime')
+    if start:
+        curs2 = curs2.filter(datetime__gte=start)
+    if end:
+        curs2 = curs2.filter(datetime__lte=end)
+
+
+    fig = px.line(
+        x = [c.datetime for c in curs2],
+        y = [c.value for c in curs2],
+        title ="График изменений курса",
+        labels={'x':'Дата', 'y':'Курс'},
+    )
+    fig.update_layout(title={
+        'font_size': 22,
+        'xanchor': 'center',
+        'x': 0.5
+    })
+    chart = fig.to_html()
+    return render(request, 'curs/get_valute.html', context={'val': val, 'chart':chart, 'form': DateForm() })
