@@ -42,3 +42,8 @@ vine==5.1.0
 wcwidth==0.2.13
 pandas
 dash-bootstrap-components
+django_plotly_dash
+channels 
+daphne  
+django-redis 
+channels-redis

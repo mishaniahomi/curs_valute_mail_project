@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'main',
     'curs',
     'dash_bootstrap_components',
+
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_plotly_dash.middleware.BaseMiddleware'
 ]
 
 ROOT_URLCONF = 'send_email.urls'
@@ -163,5 +167,17 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute="*/1"),
     },
 }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379),],
+        },
+    },
+}
+
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 import django
 django.setup()
