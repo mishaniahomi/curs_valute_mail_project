@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'channels',
+    'channels_redis',
 ]
 
 MIDDLEWARE = [
@@ -126,6 +127,19 @@ USE_L10N = True
 USE_TZ = True
 
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+ASGI_APPLICATION = 'send_email.routing.applications'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379),],
+        },
+    },
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -150,6 +164,9 @@ EMAIL_HOST_PASSWORD = 'yrvsctiipzcibetb'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
+
+
+
 CELERY_BEAT_SCHEDULE = {
     "sample_task": {
         "task": "tennis.tasks.sample_task",
@@ -167,16 +184,21 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute="*/1"),
     },
 }
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django_plotly_dash.finders.DashAssetFinder',
+    # 'django_plotly_dash.finders.DashComponentFinder'
+]
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('redis', 6379),],
-        },
-    },
-}
+PLOTLY_COMPONENTS = [
 
+    'dash_core_components',
+    'dash_html_components',
+    'dash_renderer',
+
+    'dpd_components'
+]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 import django

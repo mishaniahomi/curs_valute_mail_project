@@ -3,101 +3,16 @@
 
 
 {% load static %}
+{% load plotly_dash %}
+
 
 
 {% block content %}
     
-
-  
         <main role="main" class="col-lg-12 ">
-
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">{{ val.name }}</h1><br>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <form method="GET" action="{% url 'get_curs' pk=val.id  %}">
-                <div class="row">
-                {{ form.as_p }}
-              </div>
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </form>
-            </div>
+          <div class="{% plotly_class name='SimpleExample' %}" >
+            {% plotly_app name='SimpleExample' ratio=0.45 %}
           </div>
-          <div class="row">
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                  Обозначение</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ val.unique_id }}</div>
-                            </div>
-                          
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                  Числовой код</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ val.num_code }}</div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Буквенный код
-                                </div>
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col-auto">
-                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ val.char_code }}</div>
-                                    </div>
-                                 
-                                </div>
-                            </div>
-                         
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pending Requests Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                  Номинал</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ val.nominal }}</div>
-                            </div>
-                         
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-     
-  
-          
-
-          {{ chart|safe }}
         </main>
   
 {% endblock %}

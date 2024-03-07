@@ -89,23 +89,16 @@
                 <a class="collapse-item" href="404.html">404 Page</a>
                 <a class="collapse-item" href="blank.html">Blank Page</a>
                 
-                <h6 class="collapse-header">Курсы валют:</h6>
-                {% for valute in valuties%}
                
-                  <a class="collapse-item" href="{% url 'get_curs' valute.id %}">
-                    {{ valute }}
-                  </a>
-              
-                {% endfor %}
             </div>
         </div>
     </li>
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="{% url 'get_curs' %}">
             <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a>
+            <span>Курсы валют</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
