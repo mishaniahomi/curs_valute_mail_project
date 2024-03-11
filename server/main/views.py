@@ -4,7 +4,6 @@ from .models import Contact
 from .forms import ContactForm
 # from .service import send
 # from .tasks import send_spam_email
-from curs.celery import send
 
 class ContactView(CreateView):
 

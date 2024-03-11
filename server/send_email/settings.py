@@ -165,30 +165,24 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 
-
-
 CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
-        "task": "tennis.tasks.sample_task",
-        "schedule": crontab(minute="*/1"),
+     "get_curs_now": {
+        "task": "send_email.tasks.get_curs_now",
+        "schedule": crontab(minute=0, hour=0),
     },
 }
+
+
 
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 
-CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
-        "task": "send_email.tasks.sample_task",
-        "schedule": crontab(minute="*/1"),
-    },
-}
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django_plotly_dash.finders.DashAssetFinder',
-    # 'django_plotly_dash.finders.DashComponentFinder'
 ]
 
 PLOTLY_COMPONENTS = [
